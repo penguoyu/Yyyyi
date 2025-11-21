@@ -1,0 +1,5 @@
+{
+  "name": "InkSpire AI 刺青設計",
+  "description": "專業的 AI 刺青設計生成器，協助使用者利用 Gemini 與 Imagen 模型將概念轉化為各種藝術風格的視覺圖像。",
+  "requestFramePermissions": []
+}
