@@ -26,80 +26,80 @@ export const DesignForm: React.FC<DesignFormProps> = ({ values, onChange, onSubm
     <div className="space-y-8">
       
       {/* View Mode Selection */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gold-500 uppercase tracking-wider">
-          呈現方式
+      <div className="space-y-3">
+        <label className="block text-xs font-bold text-blue-900 uppercase tracking-widest">
+          呈現方式 View Mode
         </label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <button
             onClick={() => handleChange('viewMode', ViewMode.DESIGN)}
-            className={`flex items-center justify-center gap-2 p-3 rounded-lg border transition-all ${
+            className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
               values.viewMode === ViewMode.DESIGN
-                ? 'bg-gold-500 text-ink-950 border-gold-500 font-bold'
-                : 'bg-ink-900 border-ink-700 text-ink-400 hover:border-ink-500'
+                ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-600/20 transform scale-[1.02]'
+                : 'bg-white border-slate-100 text-slate-500 hover:border-blue-200 hover:text-blue-600'
             }`}
           >
-            <FileImage className="w-4 h-4" />
-            純圖稿 (Flash)
+            <FileImage className="w-5 h-5" />
+            <span className="font-bold">純圖稿 Flash</span>
           </button>
           <button
             onClick={() => handleChange('viewMode', ViewMode.PREVIEW)}
-            className={`flex items-center justify-center gap-2 p-3 rounded-lg border transition-all ${
+            className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 ${
               values.viewMode === ViewMode.PREVIEW
-                ? 'bg-gold-500 text-ink-950 border-gold-500 font-bold'
-                : 'bg-ink-900 border-ink-700 text-ink-400 hover:border-ink-500'
+                ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-600/20 transform scale-[1.02]'
+                : 'bg-white border-slate-100 text-slate-500 hover:border-blue-200 hover:text-blue-600'
             }`}
           >
-            <ScanFace className="w-4 h-4" />
-            實穿模擬 (Skin)
+            <ScanFace className="w-5 h-5" />
+            <span className="font-bold">實穿模擬 Skin</span>
           </button>
         </div>
       </div>
 
       {/* Prompt Section */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex justify-between items-end">
-          <label className="block text-sm font-medium text-gold-500 uppercase tracking-wider">
-            描述您的刺青構想
+          <label className="block text-xs font-bold text-blue-900 uppercase tracking-widest">
+            設計構想 Concept
           </label>
           <button
             onClick={handleRandomPrompt}
-            className="text-xs flex items-center gap-1 text-ink-400 hover:text-gold-500 transition-colors"
+            className="text-xs flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors font-semibold bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full border border-blue-200"
             disabled={isGenerating}
           >
-            <Sparkles className="w-3 h-3" />
-            幫我想個靈感
+            <Sparkles className="w-3.5 h-3.5" />
+            隨機靈感
           </button>
         </div>
         <textarea
-          className="w-full h-32 bg-ink-900 border border-ink-700 rounded-lg p-4 text-white focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all resize-none placeholder-ink-500"
-          placeholder="例如：一隻兇猛的狼對著月亮嚎叫，周圍環繞著松樹和幾何形狀，想要有一點神祕感..."
+          className="w-full h-32 bg-white border-2 border-slate-100 rounded-xl p-4 text-slate-900 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all resize-none placeholder-slate-400 text-base"
+          placeholder="描述您想要的刺青圖案... 例如：幾何風格的雄鹿，鹿角變成樹枝，帶有極簡線條..."
           value={values.prompt}
           onChange={(e) => handleChange('prompt', e.target.value)}
         />
       </div>
 
       {/* Style Selection */}
-      <div className="space-y-2">
-        <label className="flex items-center gap-2 text-sm font-medium text-gold-500 uppercase tracking-wider">
-          <Palette className="w-4 h-4" /> 藝術風格
+      <div className="space-y-3">
+        <label className="flex items-center gap-2 text-xs font-bold text-blue-900 uppercase tracking-widest">
+          <Palette className="w-4 h-4 text-blue-500" /> 藝術風格 Style
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
           {STYLES.map((style) => (
             <button
               key={style}
               onClick={() => handleChange('style', style)}
               className={`
-                flex flex-col items-start p-3 rounded-lg border transition-all text-left
+                flex flex-col items-start p-3.5 rounded-xl border-2 transition-all text-left group
                 ${values.style === style 
-                  ? 'bg-ink-800 border-gold-500 ring-1 ring-gold-500' 
-                  : 'bg-ink-900/50 border-ink-800 hover:border-ink-600 text-ink-400'}
+                  ? 'bg-blue-50 border-blue-600 ring-0' 
+                  : 'bg-white border-slate-100 hover:border-blue-300 hover:bg-slate-50'}
               `}
             >
-              <span className={`font-medium ${values.style === style ? 'text-white' : 'text-ink-300'}`}>
+              <span className={`font-bold text-sm ${values.style === style ? 'text-blue-700' : 'text-slate-700 group-hover:text-blue-600'}`}>
                 {style}
               </span>
-              <span className="text-xs text-ink-500 mt-1 line-clamp-1">
+              <span className={`text-xs mt-1 line-clamp-1 ${values.style === style ? 'text-blue-600/80' : 'text-slate-400'}`}>
                 {STYLE_DESCRIPTIONS[style]}
               </span>
             </button>
@@ -110,35 +110,40 @@ export const DesignForm: React.FC<DesignFormProps> = ({ values, onChange, onSubm
       {/* Configuration Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Body Part */}
-        <div className="space-y-2">
-          <label className="flex items-center gap-2 text-sm font-medium text-gold-500 uppercase tracking-wider">
-            <User className="w-4 h-4" /> 身體部位
+        <div className="space-y-3">
+          <label className="flex items-center gap-2 text-xs font-bold text-blue-900 uppercase tracking-widest">
+            <User className="w-4 h-4 text-blue-500" /> 身體部位 Placement
           </label>
-          <select
-            className="w-full bg-ink-900 border border-ink-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-gold-500 outline-none"
-            value={values.bodyPart}
-            onChange={(e) => handleChange('bodyPart', e.target.value as BodyPart)}
-          >
-            {BODY_PARTS.map(part => (
-              <option key={part} value={part}>{part}</option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              className="w-full appearance-none bg-white border-2 border-slate-100 rounded-xl p-3 pl-4 text-slate-900 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all font-medium"
+              value={values.bodyPart}
+              onChange={(e) => handleChange('bodyPart', e.target.value as BodyPart)}
+            >
+              {BODY_PARTS.map(part => (
+                <option key={part} value={part}>{part}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+          </div>
         </div>
 
         {/* Color Mode */}
-        <div className="space-y-2">
-          <label className="flex items-center gap-2 text-sm font-medium text-gold-500 uppercase tracking-wider">
-            <Layers className="w-4 h-4" /> 色彩模式
+        <div className="space-y-3">
+          <label className="flex items-center gap-2 text-xs font-bold text-blue-900 uppercase tracking-widest">
+            <Layers className="w-4 h-4 text-blue-500" /> 色彩模式 Color
           </label>
-          <div className="flex rounded-lg bg-ink-900 p-1 border border-ink-700">
+          <div className="flex rounded-xl bg-slate-100/80 p-1.5 border border-slate-200">
             {(['黑白灰階', '彩色'] as const).map((mode) => (
               <button
                 key={mode}
                 onClick={() => handleChange('color', mode)}
-                className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
+                className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${
                   values.color === mode
-                    ? 'bg-ink-700 text-white shadow-sm'
-                    : 'text-ink-400 hover:text-white'
+                    ? 'bg-white text-blue-600 shadow-sm border border-slate-100'
+                    : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
                 {mode}

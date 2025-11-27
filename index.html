@@ -15,17 +15,17 @@
               serif: ['Cinzel', 'serif'],
             },
             colors: {
-              ink: {
-                950: '#0a0a0a',
-                900: '#171717',
-                800: '#262626',
-                700: '#404040',
-                500: '#737373',
-                100: '#f5f5f5',
-              },
-              gold: {
-                500: '#d4af37',
-                600: '#b4941f',
+              brand: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
               }
             }
           }
@@ -34,34 +34,36 @@
     </script>
     <style>
       body {
-        background-color: #0a0a0a;
-        color: #f5f5f5;
+        background-color: #f8fafc; /* Fallback */
+        background-image: linear-gradient(to bottom, #eff6ff, #ffffff); /* Blue-50 to White */
+        color: #0f172a; /* Slate-900 */
+        min-height: 100vh;
       }
       /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #171717; 
+        background: #eff6ff;
       }
       ::-webkit-scrollbar-thumb {
-        background: #404040; 
+        background: #93c5fd; /* Blue-300 */
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #525252; 
+        background: #60a5fa; /* Blue-400 */
       }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "vite": "https://aistudiocdn.com/vite@^7.2.4",
-    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
   }
 }
 </script>
