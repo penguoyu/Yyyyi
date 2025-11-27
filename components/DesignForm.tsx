@@ -1,5 +1,5 @@
 import React from 'react';
-import { TattooStyle, BodyPart, DesignRequest, ViewMode } from '../types';
+import { BodyPart, DesignRequest, ViewMode } from '../types';
 import { STYLES, STYLE_DESCRIPTIONS, BODY_PARTS, RANDOM_PROMPTS } from '../constants';
 import { Palette, Layers, User, Sparkles, FileImage, ScanFace } from 'lucide-react';
 
@@ -76,7 +76,14 @@ export const DesignForm: React.FC<DesignFormProps> = ({ values, onChange, onSubm
           placeholder="描述您想要的刺青圖案... 例如：幾何風格的雄鹿，鹿角變成樹枝，帶有極簡線條..."
           value={values.prompt}
           onChange={(e) => handleChange('prompt', e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+              e.preventDefault();
+              onSubmit();
+            }
+          }}
         />
+        <div className="text-xs text-slate-400 text-right">按住 Ctrl + Enter 快速生成</div>
       </div>
 
       {/* Style Selection */}

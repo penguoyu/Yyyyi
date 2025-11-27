@@ -1,5 +1,12 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import { DesignRequest, ViewMode } from '../types';
+
+// Declare process to satisfy TypeScript since we are using define in vite.config.ts
+declare const process: {
+  env: {
+    API_KEY: string;
+  }
+};
 
 // Initialize the client
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });

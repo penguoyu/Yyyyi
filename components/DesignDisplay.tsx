@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, RefreshCw, Info, Clock } from 'lucide-react';
+import { Download, Info, Clock } from 'lucide-react';
 import { GeneratedDesign } from '../types';
 import { Button } from './Button';
 

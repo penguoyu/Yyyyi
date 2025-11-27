@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Header } from './components/Header';
 import { DesignForm } from './components/DesignForm';
 import { DesignDisplay } from './components/DesignDisplay';
