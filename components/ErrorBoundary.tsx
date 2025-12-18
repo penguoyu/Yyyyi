@@ -1,8 +1,9 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
 interface Props {
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 interface State {
@@ -10,11 +11,17 @@ interface State {
   error: Error | null;
 }
 
+// Explicitly extend Component from react to ensure generic props and state are recognized
 export class ErrorBoundary extends Component<Props, State> {
+  // Initialize state as a class property to resolve "Property 'state' does not exist" errors
   public state: State = {
     hasError: false,
     error: null
   };
+
+  constructor(props: Props) {
+    super(props);
+  }
 
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
@@ -31,6 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   public render() {
+    // Accessing this.state and this.props now correctly resolves through Component inheritance
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans text-slate-900">

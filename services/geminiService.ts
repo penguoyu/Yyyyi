@@ -1,113 +1,83 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { DesignRequest, ViewMode } from '../types';
 
-// Declare process to satisfy TypeScript since we are using define in vite.config.ts
-declare const process: {
-  env: {
-    API_KEY: string;
-  }
-};
-
-// Initialize the client
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 /**
- * Refines the user's simple description into a detailed English prompt.
+ * Refines the user's simple prompt into a detailed artistic prompt.
  */
 export const refinePrompt = async (request: DesignRequest): Promise<string> => {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const modelId = 'gemini-3-flash-preview';
   
-  const isPreview = request.viewMode === ViewMode.PREVIEW;
+  const systemInstruction = `You are a world-class tattoo artist. Convert the user's idea into a professional image generation prompt.
+  - If a reference image is provided, focus on modifying or enhancing it according to the concept.
+  - If no image is provided, create a design from scratch.
+  - Ensure the output is only the prompt text in English.`;
 
-  const prompt = `
-    You are an expert tattoo artist.
-    Task: Translate user request to English and create a detailed image generation prompt.
-    
-    User Request: "${request.prompt}"
-    Style: ${request.style}
-    Body Part: ${request.bodyPart}
-    Color: ${request.color}
-    Mode: ${isPreview ? 'PHOTOREALISTIC TATTOO ON SKIN' : 'FLASH SHEET DESIGN ON PAPER'}
-
-    Requirements:
-    ${isPreview ? `
-    - Photorealistic, 8k resolution, cinematic lighting.
-    - Close-up of tattoo on human skin (${request.bodyPart}).
-    - Show skin texture.
-    ` : `
-    - White background, clean lines.
-    - Vector style illustration.
-    - NO skin, NO body parts. Isolated design.
-    `}
-    
-    OUTPUT: ONLY the English prompt.
-  `;
+  let userContent = `Concept: ${request.prompt}, Style: ${request.style}, BodyPart: ${request.bodyPart}, Complexity: ${request.complexity}, Color: ${request.color}`;
+  
+  if (request.referenceImage) {
+    userContent += `\nReference Note: Based on the uploaded reference image, adapt the design to fit the user's request while maintaining structural coherence.`;
+  }
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
+      model: modelId,
+      contents: userContent,
+      config: { systemInstruction }
     });
     return response.text || request.prompt;
   } catch (error) {
-    console.error("Prompt refinement failed, using raw input:", error);
-    return `${request.style} tattoo of ${request.prompt}, ${request.color}`;
+    console.error("Prompt refinement failed:", error);
+    return request.prompt;
   }
 };
 
-const extractImageFromResponse = (response: any): string => {
-  if (response.candidates) {
-    for (const candidate of response.candidates) {
-      for (const part of candidate.content.parts) {
-        if (part.inlineData && part.inlineData.data) {
-          return `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+/**
+ * Generates the tattoo image using Gemini 3 Pro Image (Image-to-Image support).
+ */
+export const generateTattooImage = async (refinedPrompt: string, referenceImage?: string): Promise<string> => {
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const modelId = 'gemini-3-pro-image-preview';
+
+  const parts: any[] = [{ text: refinedPrompt }];
+  
+  if (referenceImage) {
+    // Extract base64 data and mime type
+    const matches = referenceImage.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (matches && matches.length === 3) {
+      parts.unshift({
+        inlineData: {
+          mimeType: matches[1],
+          data: matches[2]
         }
-      }
+      });
     }
   }
-  throw new Error("No image data found in response");
-}
 
-/**
- * Generates the tattoo image.
- * Resilient logic: Tries Pro first, catches 403/Permission errors explicitly to trigger fallback.
- */
-export const generateTattooImage = async (refinedPrompt: string): Promise<string> => {
-  
-  // 1. Attempt High Quality (Gemini 3 Pro)
   try {
-    console.log("Attempting generation with Gemini 3.0 Pro Image...");
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-image-preview',
-      contents: { parts: [{ text: refinedPrompt }] },
+      model: modelId,
+      contents: { parts },
       config: {
         imageConfig: {
-          aspectRatio: '1:1',
-          imageSize: '2K', 
+            aspectRatio: "1:1",
+            imageSize: "1K"
         }
       }
     });
-    return extractImageFromResponse(response);
-  } catch (error: any) {
-    console.warn("Gemini 3 Pro failed. This is common for free keys. Error:", error);
-    
-    // 2. Fallback to Standard (Gemini 2.5 Flash Image)
-    // This model is much more likely to work with standard API keys.
-    try {
-      console.log("Fallback: Attempting generation with Gemini 2.5 Flash Image...");
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image', 
-        contents: { parts: [{ text: refinedPrompt }] },
-        config: {
-          imageConfig: {
-            aspectRatio: '1:1' 
-            // Note: imageSize is NOT supported on Flash Image
-          }
+
+    if (response.candidates && response.candidates.length > 0) {
+      const parts = response.candidates[0].content.parts;
+      for (const part of parts) {
+        if (part.inlineData && part.inlineData.data) {
+           return `data:image/png;base64,${part.inlineData.data}`;
         }
-      });
-      return extractImageFromResponse(response);
-    } catch (fallbackError) {
-      console.error("All image generation attempts failed.", fallbackError);
-      throw fallbackError; 
+      }
     }
+    throw new Error("No image found");
+  } catch (error: any) {
+    if (error.message?.includes("not found")) throw new Error("KeyResetRequired");
+    throw error;
   }
 };

@@ -13,11 +13,6 @@ export const Header: React.FC = () => {
             INK<span className="text-blue-600">SPIRE</span>
           </span>
         </div>
-        <nav className="hidden md:flex items-center gap-8">
-           <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium tracking-wide">設計 Design</a>
-           <a href="#gallery" className="text-slate-500 hover:text-blue-600 transition-colors text-sm font-medium tracking-wide">藝廊 Gallery</a>
-           <a href="#about" className="text-slate-500 hover:text-blue-600 transition-colors text-sm font-medium tracking-wide">關於 About</a>
-        </nav>
       </div>
     </header>
   );

@@ -1,3 +1,4 @@
+
 export enum TattooStyle {
   REALISM = '寫實風格 (Realism)',
   TRADITIONAL = '美式傳統 (Traditional)',
@@ -34,6 +35,7 @@ export interface DesignRequest {
   complexity: '簡單' | '中等' | '複雜';
   color: '黑白灰階' | '彩色';
   viewMode: ViewMode;
+  referenceImage?: string; // Base64 string
 }
 
 export interface GeneratedDesign {
